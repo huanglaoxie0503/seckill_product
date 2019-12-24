@@ -1,10 +1,9 @@
 package config
 
 const (
-	Host = "49.235.42.19"
-	//Host = "127.0.0.1"
+	Host = "127.0.0.1"
 	User = "root"
 	Pw   = "root0503"
-	Db   = "seckill_product"
+	Db   = "product"
 	Port = "3306"
 )

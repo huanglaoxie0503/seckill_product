@@ -23,7 +23,7 @@ require (
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271 // indirect
-	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413 // indirect
+	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 )

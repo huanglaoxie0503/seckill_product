@@ -61,7 +61,7 @@ func main() {
 	// 注册拦截器
 	filter.RegisterFilter("/check", Auth)
 	// 2.启动服务
-	http.HandleFunc("/check", filter.Handler(Check))
+	http.HandleFunc("/check", filter.Handle(Check))
 
 	_ = http.ListenAndServe(":8080", nil)
 
