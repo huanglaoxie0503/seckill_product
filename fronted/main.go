@@ -7,6 +7,7 @@ import (
 	"github.com/kataras/iris/sessions"
 	"log"
 	"seckill_product/common"
+	"seckill_product/fronted/middlerware"
 	"seckill_product/fronted/web/controllers"
 	"seckill_product/repositories"
 	"seckill_product/services"
@@ -49,6 +50,15 @@ func main() {
 	userPro := mvc.New(app.Party("/user"))
 	userPro.Register(userService, ctx, sess.Start)
 	userPro.Handle(new(controllers.UserController))
+
+	product := repositories.NewProductManager("product", db)
+	productService := services.NewProductService(product)
+	proProduct := app.Party("/product")
+	pro := mvc.New(proProduct)
+	// 用户登录验证
+	proProduct.Use(middlerware.AuthConProduct)
+	pro.Register(productService, sess.Start)
+	pro.Handle(new(controllers.ProductController))
 
 	_ = app.Run(
 		iris.Addr("0.0.0.0:8082"),
