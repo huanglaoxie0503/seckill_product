@@ -4,14 +4,12 @@ import (
 	"context"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
-	"github.com/kataras/iris/sessions"
 	"log"
 	"seckill_product/common"
 	"seckill_product/fronted/middlerware"
 	"seckill_product/fronted/web/controllers"
 	"seckill_product/repositories"
 	"seckill_product/services"
-	"time"
 )
 
 func main() {
@@ -39,25 +37,29 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	sess := sessions.New(sessions.Config{
-		Cookie:  "hello word",
-		Expires: 60 * time.Minute,
-	})
+	//sess := sessions.New(sessions.Config{
+	//	Cookie:  "hello word",
+	//	Expires: 60 * time.Minute,
+	//})
 
 	// 注册控制器
 	user := repositories.NewUserManagerRepository("user", db)
 	userService := services.NewService(user)
 	userPro := mvc.New(app.Party("/user"))
-	userPro.Register(userService, ctx, sess.Start)
+	userPro.Register(userService, ctx)
 	userPro.Handle(new(controllers.UserController))
 
 	product := repositories.NewProductManager("product", db)
+	order := repositories.NewOrderManagerRepository("order", db)
+
 	productService := services.NewProductService(product)
+	orderService := services.NewOrderService(order)
+
 	proProduct := app.Party("/product")
 	pro := mvc.New(proProduct)
 	// 用户登录验证
-	proProduct.Use(middlerware.AuthConProduct)
-	pro.Register(productService, sess.Start)
+	proProduct.Use(middlerware.AuthControllerProduct)
+	pro.Register(productService, orderService)
 	pro.Handle(new(controllers.ProductController))
 
 	_ = app.Run(

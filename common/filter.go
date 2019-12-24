@@ -7,10 +7,11 @@ type FilterHandle func(rw http.ResponseWriter, req *http.Request) error
 
 // 声明结构体
 type Filter struct {
+	// 用来存储需要拦截的Url
 	filterMap map[string]FilterHandle
 }
 
-// 初始化函数
+// 构造函数 Filter初始化函数
 func NewFilter() *Filter {
 	return &Filter{filterMap: make(map[string]FilterHandle)}
 }

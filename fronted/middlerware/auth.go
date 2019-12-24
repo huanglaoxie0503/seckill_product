@@ -5,7 +5,7 @@ import "github.com/kataras/iris"
 /*
 	Go Iris 中间件开发
 */
-func AuthConProduct(ctx iris.Context) {
+func AuthControllerProduct(ctx iris.Context) {
 	uid := ctx.GetCookie("uid")
 	if uid == "" {
 		ctx.Application().Logger().Debug("必须先登录")

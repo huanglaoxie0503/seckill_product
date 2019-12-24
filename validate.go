@@ -27,7 +27,7 @@ func CheckUserInfo(r *http.Request) error {
 	// 获取uid ,cookie
 	uidCookie, err := r.Cookie("uid")
 	if err != nil {
-		return errors.New("用户UID Cookie 获取失败！")
+		return errors.New("用户Cookie 的 uid 获取失败！")
 	}
 	signCookie, err := r.Cookie("sign")
 	if err != nil {
@@ -62,7 +62,7 @@ func main() {
 	filter.RegisterFilter("/check", Auth)
 	// 2.启动服务
 	http.HandleFunc("/check", filter.Handle(Check))
-
+	// 3. 设置监听端口
 	_ = http.ListenAndServe(":8080", nil)
 
 }

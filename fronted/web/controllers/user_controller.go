@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
 	"github.com/kataras/iris/sessions"
 	"seckill_product/datamodels"
+	"seckill_product/encrypt"
 	"seckill_product/services"
 	"seckill_product/tool"
 	"strconv"
@@ -54,18 +56,28 @@ func (c *UserController) GetLogin() mvc.View {
 }
 
 func (c *UserController) PostLogin() mvc.Response {
-	// 从前端获取表单数据
+	// 1. 获取用户提交的表单信息
 	var (
 		userName = c.Ctx.FormValue("userName")
 		password = c.Ctx.FormValue("password")
 	)
+	// 2. 验证账号密码
 	user, isOk := c.Service.IsPwdSuccess(userName, password)
 	if !isOk {
 		return mvc.Response{
 			Path: "/user/login",
 		}
 	}
+	// 3. 写入用户ID到cookie中
 	tool.GlobalCookie(c.Ctx, "uid", strconv.FormatInt(user.ID, 10))
+	uidByte := []byte(strconv.FormatInt(user.ID, 10))
+	uidStr, err := encrypt.EnPwdCode(uidByte)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// 写入浏览器Cookies
+	tool.GlobalCookie(c.Ctx, "sign", uidStr)
+
 	c.Session.Set("userID", strconv.FormatInt(user.ID, 10))
 	return mvc.Response{
 		Path: "/product/",
