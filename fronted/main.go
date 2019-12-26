@@ -8,6 +8,7 @@ import (
 	"seckill_product/common"
 	"seckill_product/fronted/middlerware"
 	"seckill_product/fronted/web/controllers"
+	"seckill_product/rabbitmq"
 	"seckill_product/repositories"
 	"seckill_product/services"
 )
@@ -42,6 +43,9 @@ func main() {
 	//	Expires: 60 * time.Minute,
 	//})
 
+	// 创建 RabbitMQ 实例
+	rabbitMQ := rabbitmq.NewRabbitMQSimple("OscarProduct")
+
 	// 注册控制器
 	user := repositories.NewUserManagerRepository("user", db)
 	userService := services.NewService(user)
@@ -59,7 +63,7 @@ func main() {
 	pro := mvc.New(proProduct)
 	// 用户登录验证
 	proProduct.Use(middlerware.AuthControllerProduct)
-	pro.Register(productService, orderService)
+	pro.Register(productService, orderService, ctx, rabbitMQ)
 	pro.Handle(new(controllers.ProductController))
 
 	_ = app.Run(
