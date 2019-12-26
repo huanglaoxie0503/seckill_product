@@ -12,7 +12,7 @@ func GetNativeIp() (string, error) {
 		return "", err
 	}
 	for _, adder := range address {
-		// 检查IP地址判断是否返回地址
+		// 检查IP地址判断是否回环地址
 		if ipNet, isOk := adder.(*net.IPNet); isOk && !ipNet.IP.IsLoopback() {
 			if ipNet.IP.To4() != nil {
 				return ipNet.IP.String(), nil

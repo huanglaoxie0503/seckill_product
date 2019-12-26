@@ -36,7 +36,7 @@ func GetProduct(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("getOne", GetProduct)
-	err := http.ListenAndServe("12345", nil)
+	err := http.ListenAndServe("8084", nil)
 	if err != nil {
 		log.Fatal("Err:", err)
 	}
